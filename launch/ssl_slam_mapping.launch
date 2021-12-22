@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
 
-    <!--node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/Downloads/L515_test.bag"/--> 
-    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock /media/viplab/XavierSSD1T/Download/L515_test_cory_better.bag"/>
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(env HOME)/Downloads/L515_test_cory_better.bag"/>
+<!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock /media/viplab/XavierSSD1T/Download/L515_test_cory_better.bag"/> -->
     <param name="/use_sim_time" value="true" />
 
     <param name="scan_period" value="0.1" />
