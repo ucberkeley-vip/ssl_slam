@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <launch>
 
-    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(env HOME)/Downloads/L515_test_cory_better.bag"/>
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(env HOME)/rosbag_01_19_2022_cory/2022-01-19-18-56-50-90-degree.bag"/>
+<!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/Downloads/L515_test_cory_better.bag"/> -->
 <!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock /media/viplab/XavierSSD1T/Download/L515_test_cory_better.bag"/> -->
     <param name="/use_sim_time" value="true" />
 
-    <param name="scan_period" value="0.1" />
-    <param name="vertical_angle" type="double" value="2.0" />
-    <param name="max_dis" type="double" value="9.0" />
+    <param name="scan_period" value="0.1" /> <!--no use for now-->
+    <param name="vertical_angle" type="double" value="90.0" />
+    <param name="max_dis" type="double" value="9.0" /> <!--no use for now-->
     <param name="map_resolution" type="double" value="0.05" />
-    <param name="min_dis" type="double" value="0.2" />
+    <param name="min_dis" type="double" value="0.2" /> <!--no use for now-->
     
     <node pkg="ssl_slam" type="ssl_slam_laser_processing_node" name="ssl_slam_laser_processing_node" output="screen"/>
     <node pkg="ssl_slam" type="ssl_slam_odom_estimation_node" name="ssl_slam_odom_estimation_node" output="screen"/>

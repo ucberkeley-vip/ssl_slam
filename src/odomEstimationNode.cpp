@@ -121,16 +121,74 @@ void odom_estimation(){
             tf::Transform transform;
 
 //            ------------with modification------------
-            tf::Vector3 t(0.866*t_current.x() + 0.5*t_current.z(), t_current.y(), -0.5*t_current.x() + 0.866*t_current.z());
+            double theta_degree = lidar_param.vertical_angle;
+//            std::cout << std::endl;
+//            std::cout << "vertical angle: " << theta_degree << std::endl;
+//            std::cout << std::endl;
+            double theta_radians = theta_degree/180*M_PI; // in radians
+            tf::Vector3 t(cos(0.5*M_PI - theta_radians)*t_current.x() + cos(theta_radians)*t_current.z(),
+                          t_current.y(),
+                          -cos(theta_radians)*t_current.x() + cos(0.5*M_PI - theta_radians)*t_current.z());
             transform.setOrigin(t);
-            tf::Quaternion q(0, 0.2588223, 0, 0.9659249);
+
+            tf::Matrix3x3 camera_rotation_m(cos(0.5*M_PI - theta_radians) , 0, sin(0.5*M_PI - theta_radians),
+                                            0                  , 1,                  0,
+                                            -sin(0.5*M_PI - theta_radians), 0, cos(0.5*M_PI - theta_radians)); // rotation around Y - axis
+
+            tf::Quaternion q(q_current.x(),q_current.y(),q_current.z(),q_current.w());
+            tf::Matrix3x3 original_q_m(q);
+            camera_rotation_m *= original_q_m;
+            tf::Quaternion composed_q = tf::Quaternion();
+            camera_rotation_m.getRotation(composed_q);
+//
+//            std::cout << std::endl;
+//            std::cout << camera_rotation_m[0][0] << " " << camera_rotation_m[0][1] << " " << camera_rotation_m[0][2] << std::endl;
+//            std::cout << camera_rotation_m[1][0] << " " << camera_rotation_m[1][1] << " " << camera_rotation_m[1][2] << std::endl;
+//            std::cout << camera_rotation_m[2][0] << " " << camera_rotation_m[2][1] << " " << camera_rotation_m[2][2] << std::endl;
+//            std::cout << std::endl;
+//
+//            std::cout << "Quaternion: " << std::endl;
+//            std::cout << composed_q[0] << " " << composed_q[1] << " " << composed_q[2] << " " << composed_q[3] << std::endl;
+//            std::cout << std::endl;
+//
+            transform.setRotation(composed_q);
+
+//            tf::Quaternion q(0, 0.2588223, 0, 0.9659249); // quaternion for 60 degree
 
 //            ------------no modification------------
 //            tf::Vector3 t(t_current.x(), t_current.y(), t_current.z());
 //            transform.setOrigin(t);
 //            tf::Quaternion q(q_current.x(),q_current.y(),q_current.z(),q_current.w());
+//
+//            tf::Quaternion test_q(0, 0.258819, 0, 0.9659258);
+//            tf::Matrix3x3 test_m(test_q);
+//            tf::Matrix3x3 identity_m(1, 0, 0, 0, 1, 0, 0, 0, 1);
+//
+//            test_m *= identity_m;
+//            double roll, pitch, yaw;
+//            test_m.getRPY(roll, pitch, yaw); // row, pitch, and yaw is represented in ZYX euler angle
+//
+//            std::cout << "Roll: " << roll << ", Pitch: " << pitch << ", Yaw: " << yaw << std::endl;
+//            std::cout << std::endl;
+//            std::cout << test_m[0][0] << " " << test_m[0][1] << " " << test_m[0][2] << std::endl;
+//            std::cout << test_m[1][0] << " " << test_m[1][1] << " " << test_m[1][2] << std::endl;
+//            std::cout << test_m[2][0] << " " << test_m[2][1] << " " << test_m[2][2] << std::endl;
+//            std::cout << std::endl;
+//
+//            tf::Quaternion test_q_again = tf::Quaternion();
+//            test_m.getRotation(test_q_again);
+//
+//            std::cout << std::endl;
+//            std::cout << "Quat" << std::endl;
+//            std::cout << test_q_again[0] << " " << test_q_again[1] << " " << test_q_again[2] << std::endl;
+//            std::cout << std::endl;
+//
+//            transform.setRotation(q);
 
-            transform.setRotation(q);
+
+
+
+
             br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", "base_link"));
 
             // publish odometry
@@ -139,13 +197,21 @@ void odom_estimation(){
             laserOdometry.child_frame_id = "base_link"; 
             laserOdometry.header.stamp = pointcloud_time;
 //          ------------with modification------------
-            laserOdometry.pose.pose.orientation.x = 0;
-            laserOdometry.pose.pose.orientation.y = 0.2588223;
-            laserOdometry.pose.pose.orientation.z = 0;
-            laserOdometry.pose.pose.orientation.w = 0.9659249;
-            laserOdometry.pose.pose.position.x = 0.866*t_current.x() + 0.5*t_current.z();
-            laserOdometry.pose.pose.position.y = t_current.y();
-            laserOdometry.pose.pose.position.z = -0.5*t_current.x() + 0.866*t_current.z();
+//            laserOdometry.pose.pose.orientation.x = 0;
+//            laserOdometry.pose.pose.orientation.y = 0.2588223;
+//            laserOdometry.pose.pose.orientation.z = 0;
+//            laserOdometry.pose.pose.orientation.w = 0.9659249;
+//            laserOdometry.pose.pose.position.x = 0.866*t_current.x() + 0.5*t_current.z();
+//            laserOdometry.pose.pose.position.y = t_current.y();
+//            laserOdometry.pose.pose.position.z = -0.5*t_current.x() + 0.866*t_current.z();
+            laserOdometry.pose.pose.orientation.x = composed_q[0];
+            laserOdometry.pose.pose.orientation.y = composed_q[1];
+            laserOdometry.pose.pose.orientation.z = composed_q[2];
+            laserOdometry.pose.pose.orientation.w = composed_q[3];
+            laserOdometry.pose.pose.position.x = t[0];
+            laserOdometry.pose.pose.position.y = t[1];
+            laserOdometry.pose.pose.position.z = t[2];
+
 
 //          ------------no modification------------
 //            laserOdometry.pose.pose.orientation.x = q_current.x();
