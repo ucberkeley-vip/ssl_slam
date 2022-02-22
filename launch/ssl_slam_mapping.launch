@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <launch>
-<!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/2_20_data_collection/2022-02-20-20-30-39-60-degree-no-depth-img.bag"/> -->
-    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock /media/viplab/XavierSSD1T/rosbag_01_19_2022_cory/2022-01-19-18-56-50-90-degree.bag"/>
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(env HOME)/2_20_data_collection/2022-02-20-20-21-56-90-degree-no-depth-img.bag"/>
+<!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock /media/viplab/XavierSSD1T/rosbag_01_19_2022_cory/2022-01-19-18-56-50-90-degree.bag"/> -->
 <!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/Downloads/L515_test_cory_better.bag"/> -->
 <!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock /media/viplab/XavierSSD1T/Download/L515_test_cory_better.bag"/> -->
     <param name="/use_sim_time" value="true" />
 
     <param name="scan_period" value="0.1" /> <!--no use for now-->
-    <param name="vertical_angle" type="double" value="90.0" />
+    <param name="vertical_angle" type="double" value="83.0" />
     <param name="max_dis" type="double" value="9.0" /> <!--no use for now-->
     <param name="map_resolution" type="double" value="0.01" />
     <param name="min_dis" type="double" value="0.2" /> <!--no use for now-->
