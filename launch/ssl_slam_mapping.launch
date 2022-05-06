@@ -1,16 +1,18 @@
 <?xml version="1.0"?>
 <launch>
-    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(env HOME)/2_20_data_collection/2022-02-20-20-21-56-90-degree-no-depth-img.bag"/>
+    <!-- 05_05 data collection has oriented joist, oriented about 20 degree -->
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(env HOME)/05_05_2022_data_collection/30_degree_from_horizontal_joist/2022-05-05-16-01-45-75-degree.bag"/> 
+    <!-- <node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/04_22_2022_data_collection/2022-04-22-15-44-30-75-degree.bag"/> -->
+<!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/2_20_data_collection/2022-02-20-20-21-56-90-degree-no-depth-img.bag"/> -->
 <!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock /media/viplab/XavierSSD1T/rosbag_01_19_2022_cory/2022-01-19-18-56-50-90-degree.bag"/> -->
-<!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock $(env HOME)/Downloads/L515_test_cory_better.bag"/> -->
 <!--     <node pkg="rosbag" type="play" name="rosbag_play" args="clock /media/viplab/XavierSSD1T/Download/L515_test_cory_better.bag"/> -->
     <param name="/use_sim_time" value="true" />
 
     <param name="scan_period" value="0.1" /> <!--no use for now-->
-    <param name="vertical_angle" type="double" value="83.0" />
-    <param name="max_dis" type="double" value="9.0" /> <!--no use for now-->
+    <param name="vertical_angle" type="double" value="68.0" />
+    <param name="max_dis" type="double" value="20.0" /> <!--no use for now-->
     <param name="map_resolution" type="double" value="0.01" />
-    <param name="min_dis" type="double" value="0.2" /> <!--no use for now-->
+    <param name="min_dis" type="double" value="0.01" /> <!--no use for now-->
     
     <node pkg="ssl_slam" type="ssl_slam_laser_processing_node" name="ssl_slam_laser_processing_node" output="screen"/>
     <node pkg="ssl_slam" type="ssl_slam_odom_estimation_node" name="ssl_slam_odom_estimation_node" output="screen"/>
